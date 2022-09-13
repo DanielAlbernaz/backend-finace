@@ -76,6 +76,12 @@ git checkout sua-branch
 composer install 
 ```
 
+## Startar serve
+
+```
+php artisan serve
+```
+
 ## Rodar migrates
 
 ```
