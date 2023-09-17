@@ -24,6 +24,7 @@ return new class extends Migration
             $table->date('payment_date')->nullable();
             $table->longtext('descrition')->nullable();
             $table->longtext('observation')->nullable();
+            $table->enum('repetition', ['only', 'installments', 'fixed']);
             $table->string('portion')->nullable();
             $table->foreignId('category_id')->constrained();
             $table->foreignIdFor(User::class)->constrained();

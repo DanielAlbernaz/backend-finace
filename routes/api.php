@@ -27,6 +27,7 @@ Route::controller(AuthController::class)
         Route::post('login', 'login');
         Route::post('logout', 'logout');
         Route::post('register','register');
+        Route::post('logout', 'logout');
         // Route::get('me', 'me');
 });
 

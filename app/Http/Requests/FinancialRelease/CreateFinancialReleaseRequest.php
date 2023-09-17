@@ -31,7 +31,9 @@ class CreateFinancialReleaseRequest extends FormRequest
             'descrition' => ['string'],
             'observation' => ['string'],
             'category_id' => ['required', 'exists:App\Models\Category,id'],
-            'user_id' => ['required', 'exists:App\Models\User,id']
+            'user_id' => ['required', 'exists:App\Models\User,id'],
+            'repetition' => ['required', 'string', 'in:only,installments,fixed'],
+            'installments' => ['array', 'required_if:repetition,installments']
         ];
     }
 }

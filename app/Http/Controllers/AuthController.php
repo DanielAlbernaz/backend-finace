@@ -11,12 +11,22 @@ use Illuminate\Support\Facades\Hash;
 
 class AuthController extends Controller
 {
+    /**
+     * Create a new AuthController instance.
+     *
+     * @return void
+     */
+    public function __construct()
+    {
+        $this->middleware(['auth:sanctum'], ['except' => ['login', 'register']]);
+    }
+
     public function login(Request $request)
     {
         $credentials = $request->only('email', 'password');
 
         $emailUser = '';
-        $user = User::where(['email' => $request['email']])->first();
+        $user = User::where(['email' => $credentials['email']])->first();
         if(!isset($user->email)){
             abort(401, 'Email não cadastrado.');
         }
@@ -43,5 +53,13 @@ class AuthController extends Controller
     public function me()
     {
         return response()->json(new UserResource(auth()->user()));
+    }
+
+    public function logout(Request $request)
+    {
+        // dd($request->user());
+        $request->user()->currentAccessToken()->delete();
+
+        return response()->json('Deslogado');
     }
 }
