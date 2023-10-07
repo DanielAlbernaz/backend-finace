@@ -15,7 +15,7 @@ return new class extends Migration
     {
         Schema::create('installments', function (Blueprint $table) {
             $table->id();
-            $table->enum('type', ['installment', 'fixed']);
+            $table->enum('type', ['installments', 'fixed']);
             $table->timestamps();
         });
     }

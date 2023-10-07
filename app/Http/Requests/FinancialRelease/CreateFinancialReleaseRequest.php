@@ -33,7 +33,9 @@ class CreateFinancialReleaseRequest extends FormRequest
             'category_id' => ['required', 'exists:App\Models\Category,id'],
             'user_id' => ['required', 'exists:App\Models\User,id'],
             'repetition' => ['required', 'string', 'in:only,installments,fixed'],
-            'installments' => ['array', 'required_if:repetition,installments']
+            'periodicity' => ['string', 'required_if:repetition,installments,fixed', 'in:daily,weekly,monthly,annual'],
+            'number_repetition' => ['integer', 'required_if:repetition,fixed', 'max:240'],
+            'number_installments_repetition' => ['integer', 'required_if:repetition,installments'],
         ];
     }
 }

@@ -5,11 +5,26 @@ namespace App\Http\Controllers;
 use App\Http\Requests\FinancialRelease\CreateFinancialReleaseRequest;
 use App\Models\FinancialRelease;
 use App\Models\Installment;
+use App\Services\FinancialRelease\FinancialReleaseServiceInterface;
 use Illuminate\Http\Request;
 use Illuminate\Support\Arr;
 
 class FinancialReleaseController extends Controller
 {
+    protected $service;
+
+    /**
+     * Method __construct
+     *
+     * @param FinancialReleaseServiceInterface $service
+     *
+     * @return void
+     */
+    public function __construct(FinancialReleaseServiceInterface $service)
+    {
+        $this->service = $service;
+    }
+
     public function index()
     {
         //
@@ -18,27 +33,7 @@ class FinancialReleaseController extends Controller
     public function store(CreateFinancialReleaseRequest $request, FinancialRelease $financialRelease)
     {
         $data = $request->validated();
-
-        if($data['repetition'] == 'installments'){
-            $portion = 1;
-            $totalPortion = count($data['installments']);
-            $idInstallment = Installment::create(['type' => 'installment']);
-
-            foreach($data['installments'] as $financialRelease){
-                $data['date'] = $financialRelease['date'];
-                $data['value'] = $financialRelease['value'];
-                $data['portion'] = $portion . '/' . $totalPortion;
-                $data['installment_id'] = $idInstallment->id;
-                $portion++;
-
-                $data = Arr::except($data, ['installments']);
-
-                FinancialRelease::create($data);
-            }
-        } else {
-            $financialRelease->create($data);
-        }
-
+        $this->service->createFinancialRelease($data);
         return response()->json('Lançamento criado com sucesso', 201);
     }
 
