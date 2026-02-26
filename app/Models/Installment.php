@@ -14,4 +14,12 @@ class Installment extends Model
         'created_at',
         'updated_at'
     ];
+
+    /**
+     * Relacionamento com os lançamentos financeiros
+     */
+    public function financialReleases()
+    {
+        return $this->hasMany(FinancialRelease::class, 'installment_id');
+    }
 }

@@ -24,18 +24,45 @@ class CreateFinancialReleaseRequest extends FormRequest
     public function rules()
     {
         return [
-            'type' => ['required', 'string', 'in:expense,revenue'],
+            'type' => ['required', 'string', 'in:expense,revenue,despesa,receita'],
             'value' => ['required', 'numeric'],
             'date' => ['required', 'date'],
-            'payment_date' => ['date'],
-            'descrition' => ['string'],
-            'observation' => ['string'],
+            'due_date' => ['required', 'date'],
+            'payment_date' => ['nullable', 'date'],
+            'descrition' => ['nullable', 'string'],
+            'observation' => ['nullable', 'string'],
             'category_id' => ['required', 'exists:App\Models\Category,id'],
-            'user_id' => ['required', 'exists:App\Models\User,id'],
-            'repetition' => ['required', 'string', 'in:only,installments,fixed'],
-            'periodicity' => ['string', 'required_if:repetition,installments,fixed', 'in:daily,weekly,monthly,annual'],
-            'number_repetition' => ['integer', 'required_if:repetition,fixed', 'max:240'],
-            'number_installments_repetition' => ['integer', 'required_if:repetition,installments'],
+            'payment_method_id' => ['nullable', 'exists:App\Models\PaymentMethod,id'],
+            'repetition' => ['required', 'string', 'in:only,installments,fixed,unico'],
+            // periodicity só é obrigatória para 'fixed' (recorrente), não para 'installments' (parcelamento)
+            'periodicity' => ['nullable', 'string', 'required_if:repetition,fixed', 'in:daily,weekly,monthly,annual'],
+            // Para recorrência: mínimo 1, máximo 240
+            'number_repetition' => ['nullable', 'integer', 'required_if:repetition,fixed', 'min:1', 'max:240'],
+            // Para parcelamento: mínimo 2 parcelas, máximo 240
+            'number_installments_repetition' => ['nullable', 'integer', 'required_if:repetition,installments', 'min:2', 'max:240'],
         ];
+    }
+
+    /**
+     * Prepare the data for validation.
+     */
+    protected function prepareForValidation()
+    {
+        // Normaliza valores do frontend para o backend
+        if ($this->has('repetition')) {
+            $repetition = $this->input('repetition');
+            if ($repetition === 'unico') {
+                $this->merge(['repetition' => 'only']);
+            }
+        }
+
+        if ($this->has('type')) {
+            $type = $this->input('type');
+            if ($type === 'receita') {
+                $this->merge(['type' => 'revenue']);
+            } elseif ($type === 'despesa') {
+                $this->merge(['type' => 'expense']);
+            }
+        }
     }
 }

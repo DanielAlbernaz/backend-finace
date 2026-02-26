@@ -26,7 +26,8 @@ class UserRequest extends FormRequest
         return [
             'name' => ['required', 'string'],
             'email' => ['required', 'string', 'unique:users,email'],
-            'password' => ['required', 'min:8']
+            'password' => ['required', 'min:8'],
+            'invite_token' => ['nullable', 'string', 'exists:finance_account_invites,token']
         ];
     }
 }

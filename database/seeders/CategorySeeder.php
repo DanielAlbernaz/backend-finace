@@ -15,6 +15,59 @@ class CategorySeeder extends Seeder
      */
     public function run()
     {
-        Category::factory(10)->create();
+        // Categorias padrão de RECEITAS (user_id = null)
+        $revenueCategories = [
+            'Salário',
+            'Freelance',
+            'Investimentos',
+            'Aluguel',
+            'Vendas',
+            'Bonificações',
+            'Outras Receitas',
+        ];
+
+        foreach ($revenueCategories as $title) {
+            Category::firstOrCreate(
+                [
+                    'title' => $title,
+                    'type' => 'revenue',
+                    'user_id' => null,
+                ],
+                [
+                    'is_custom' => false,
+                    'finance_account_id' => null,
+                    'is_active' => true,
+                ]
+            );
+        }
+
+        // Categorias padrão de DESPESAS (user_id = null)
+        $expenseCategories = [
+            'Alimentação',
+            'Transporte',
+            'Moradia',
+            'Saúde',
+            'Educação',
+            'Lazer',
+            'Compras',
+            'Contas e Serviços',
+            'Impostos',
+            'Outras Despesas',
+        ];
+
+        foreach ($expenseCategories as $title) {
+            Category::firstOrCreate(
+                [
+                    'title' => $title,
+                    'type' => 'expense',
+                    'user_id' => null,
+                ],
+                [
+                    'is_custom' => false,
+                    'finance_account_id' => null,
+                    'is_active' => true,
+                ]
+            );
+        }
     }
 }

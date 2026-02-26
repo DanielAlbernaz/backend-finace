@@ -4,6 +4,7 @@ namespace App\Providers;
 
 use App\Models\FinancialRelease;
 use App\Models\Installment;
+use App\Observers\FinancialReleaseObserver;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Database\Eloquent\Relations\Relation;
 
@@ -32,5 +33,8 @@ class AppServiceProvider extends ServiceProvider
         Relation::morphMap([
             'installment' => Installment::class
         ]);
+
+        // Registra o Observer para FinancialRelease
+        FinancialRelease::observe(FinancialReleaseObserver::class);
     }
 }

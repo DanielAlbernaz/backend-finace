@@ -18,8 +18,10 @@ class DatabaseSeeder extends Seeder
     public function run()
     {
         $this->call([
+            PlanSeeder::class,
             UserSeeder::class,
-            CategorySeeder::class
+            CategorySeeder::class,
+            PaymentMethodSeeder::class,
         ]);
     }
 }
